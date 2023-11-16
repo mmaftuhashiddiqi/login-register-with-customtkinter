@@ -1,0 +1,4 @@
+# Requring Package
+
+- customtkinter
+- bcrypt
