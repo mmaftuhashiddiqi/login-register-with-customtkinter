@@ -1,8 +1,9 @@
 import customtkinter
-import sqlite3
-import bcrypt
 from tkinter import *
 from tkinter import messagebox
+from PIL import Image
+import sqlite3
+import bcrypt
 
 
 # initiate the gui
@@ -18,7 +19,7 @@ font4 = ('Arial', 13, 'bold', 'underline')
 
 
 # database
-conn = sqlite3.connect('data.db')
+conn = sqlite3.connect('database/data.db')
 cursor = conn.cursor()
 
 cursor.execute(
@@ -31,10 +32,7 @@ cursor.execute(
 )
 
 
-def login_account():
-  
-  username = username_entry.get()
-  password = password_entry.get()
+def login_account(username, password):
   
   if username != '' and password != '':
     cursor.execute('SELECT password FROM users WHERE username=?', [username])
@@ -49,11 +47,7 @@ def login_account():
   else:
     messagebox.showerror('Error', 'Enter all data.')
 
-def signup_account():
-  
-  username = username_entry2.get()
-  password = password_entry2.get()
-  repeat_password = repeat_password_entry.get()
+def signup_account(username, password, repeat_password):
   
   if username != '' and password != '' and repeat_password != '':
     cursor.execute('SELECT username FROM users WHERE username=?', [username])
@@ -64,7 +58,6 @@ def signup_account():
     else:
       encoded_password = password.encode('utf-8')
       hashed_password = bcrypt.hashpw(encoded_password, bcrypt.gensalt())
-      # print(hashed_password)
       cursor.execute('INSERT INTO users VALUES (?, ?)', [username, hashed_password])
       conn.commit()
       messagebox.showinfo('Success', 'Account has been created.')
@@ -79,8 +72,8 @@ def login():
   frame1 = customtkinter.CTkFrame(app, bg_color='#001220', fg_color='#001220', width=470, height=400)
   frame1.place(x=0, y=0)
   
-  image1 = PhotoImage(file='img/bg2.png')
-  image1_label = Label(frame1, image=image1, bg='#001220')
+  image1 = customtkinter.CTkImage(light_image=Image.open("img/bg2.png"), dark_image=Image.open("img/bg2.png"), size=(205, 400))
+  image1_label = customtkinter.CTkLabel(frame1, image=image1, bg_color='#001220', text='')
   image1_label.place(x=0, y=0)
   frame1.image1 = image1
 
@@ -96,7 +89,7 @@ def login():
   password_entry = customtkinter.CTkEntry(frame1, font=font2, show='*', text_color='#fff', fg_color='#001a2e', bg_color='#121111', border_color='#004780', border_width=3, placeholder_text='Password', placeholder_text_color='#a3a3a3', width=200, height=50)
   password_entry.place(x=230, y=150)
 
-  login_button = customtkinter.CTkButton(frame1, command=login_account,font=font2, text_color='#fff', text='Login', fg_color='#00965d', hover_color='#006e44', bg_color='#121111', cursor='hand2', corner_radius=5, width=120)
+  login_button = customtkinter.CTkButton(frame1, command=lambda: login_account(username_entry.get(), password_entry.get()),font=font2, text_color='#fff', text='Login', fg_color='#00965d', hover_color='#006e44', bg_color='#121111', cursor='hand2', corner_radius=5, width=120)
   login_button.place(x=230, y=220)
 
   signup_label = customtkinter.CTkLabel(frame1, font=font3, text="Don't have an account yet?", text_color='#fff', bg_color='#001220')
@@ -113,8 +106,8 @@ def signup():
   frame2 = customtkinter.CTkFrame(app, bg_color='#001220', fg_color='#001220', width=470, height=400)
   frame2.place(x=0, y=0)
   
-  image2 = PhotoImage(file='img/bg2.png')
-  image2_label = Label(frame2, image=image2, bg='#001220')
+  image2 = customtkinter.CTkImage(light_image=Image.open("img/bg2.png"), dark_image=Image.open("img/bg2.png"), size=(205, 400))
+  image2_label = customtkinter.CTkLabel(frame2, image=image2, bg_color='#001220', text='')
   image2_label.place(x=0, y=0)
   frame2.image2 = image2
   
@@ -134,7 +127,7 @@ def signup():
   repeat_password_entry = customtkinter.CTkEntry(frame2, font=font2, show='*', text_color='#fff', fg_color='#001a2e', bg_color='#121111', border_color='#004780', border_width=3, placeholder_text='Repeat password', placeholder_text_color='#a3a3a3', width=200, height=50)
   repeat_password_entry.place(x=230, y=220)
   
-  signup_button = customtkinter.CTkButton(frame2, command=signup_account, font=font2, text_color='#fff', text='Sign up', fg_color='#00965d', hover_color='#006e44', bg_color='#121111', cursor='hand2', corner_radius=5, width=120)
+  signup_button = customtkinter.CTkButton(frame2, command=lambda: signup_account(username_entry2.get(), password_entry2.get(), repeat_password_entry.get()), font=font2, text_color='#fff', text='Sign up', fg_color='#00965d', hover_color='#006e44', bg_color='#121111', cursor='hand2', corner_radius=5, width=120)
   signup_button.place(x=230, y=290)
   
   login_label2 = customtkinter.CTkLabel(frame2, font=font3, text='Already have an account?', text_color='#fff', bg_color='#001220')
@@ -148,8 +141,8 @@ def signup():
 frame1 = customtkinter.CTkFrame(app, bg_color='#001220', fg_color='#001220', width=470, height=400)
 frame1.place(x=0, y=0)
 
-image1 = PhotoImage(file='img/bg2.png')
-image1_label = Label(frame1, image=image1, bg='#001220')
+image1 = customtkinter.CTkImage(light_image=Image.open("img/bg2.png"), dark_image=Image.open("img/bg2.png"), size=(205, 400))
+image1_label = customtkinter.CTkLabel(frame1, image=image1, bg_color='#001220', text='')
 image1_label.place(x=0, y=0)
 
 login_label = customtkinter.CTkLabel(frame1, font=font1, text='Login', text_color='#fff', bg_color='#001220')
@@ -161,7 +154,7 @@ username_entry.place(x=230, y=80)
 password_entry = customtkinter.CTkEntry(frame1, font=font2, show='*', text_color='#fff', fg_color='#001a2e', bg_color='#121111', border_color='#004780', border_width=3, placeholder_text='Password', placeholder_text_color='#a3a3a3', width=200, height=50)
 password_entry.place(x=230, y=150)
 
-login_button = customtkinter.CTkButton(frame1, command=login_account,font=font2, text_color='#fff', text='Login', fg_color='#00965d', hover_color='#006e44', bg_color='#121111', cursor='hand2', corner_radius=5, width=120)
+login_button = customtkinter.CTkButton(frame1, command=lambda: login_account(username_entry.get(), password_entry.get()),font=font2, text_color='#fff', text='Login', fg_color='#00965d', hover_color='#006e44', bg_color='#121111', cursor='hand2', corner_radius=5, width=120)
 login_button.place(x=230, y=220)
 
 signup_label = customtkinter.CTkLabel(frame1, font=font3, text="Don't have an account yet?", text_color='#fff', bg_color='#001220')
